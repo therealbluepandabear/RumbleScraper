@@ -20,6 +20,8 @@ fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
                 }
             }
         }
+
+        println("Page $page")
     } catch (exception: IOException) {
         exception.printStackTrace()
     }
