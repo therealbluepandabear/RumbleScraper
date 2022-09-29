@@ -16,7 +16,7 @@ fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
         } else {
             for (element in doc.getElementsByClass("video-listing-entry")) {
                 for (element2 in element.getElementsByClass("video-item--title")) {
-                    println("${element2.text()}'\n______________________________________")
+                    println("${element2.text()}'\n${"_".repeat(100)}")
                 }
             }
         }
