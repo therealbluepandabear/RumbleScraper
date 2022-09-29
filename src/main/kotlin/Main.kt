@@ -1,5 +1,4 @@
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import java.io.IOException
 
 fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
@@ -12,16 +11,10 @@ fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
 
         val doc = Jsoup.connect(url).get()
 
-        val titles: MutableList<Element> = mutableListOf()
-
         for (element in doc.getElementsByClass("video-listing-entry")) {
             for (element2 in element.getElementsByClass("video-item--title")) {
-                titles.add(element2)
+                println(element2.text())
             }
-        }
-
-        for (element in titles) {
-            println(element.text())
         }
     } catch (exception: IOException) {
         exception.printStackTrace()
