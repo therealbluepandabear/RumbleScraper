@@ -29,6 +29,7 @@ fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
 
 fun main() {
     var currentPage = 1
+    println("Enter search query below")
     val query = readln()
     getRumbleSearchResultsForQuery(query)
 
