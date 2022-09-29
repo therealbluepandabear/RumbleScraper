@@ -11,9 +11,13 @@ fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
 
         val doc = Jsoup.connect(url).get()
 
-        for (element in doc.getElementsByClass("video-listing-entry")) {
-            for (element2 in element.getElementsByClass("video-item--title")) {
-                println(element2.text())
+        if (doc.getElementsByClass("video-listing-entry").size == 0) {
+            println("No results found")
+        } else {
+            for (element in doc.getElementsByClass("video-listing-entry")) {
+                for (element2 in element.getElementsByClass("video-item--title")) {
+                    println(element2.text())
+                }
             }
         }
     } catch (exception: IOException) {
