@@ -1,7 +1,7 @@
 import org.jsoup.Jsoup
 import java.io.IOException
 
-class RumbleScraper {
+class RumbleScraper private constructor() {
     companion object {
         fun create(): RumbleScraper {
             return RumbleScraper()
