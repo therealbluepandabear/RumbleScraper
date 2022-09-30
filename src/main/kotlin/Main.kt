@@ -21,7 +21,11 @@ fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
 
                 for (element2 in element.getElementsByClass("video-item--by")) {
                     for (element3 in element2.getElementsByClass("ellipsis-1")) {
-                        println("CREATOR >>> ${element3.text()}")
+                        if (element3.getElementsByClass("video-item--by-verified verification-badge-icon").isNotEmpty()) {
+                            println("CREATOR >>> ${element3.text()} (V)")
+                        } else {
+                            println("CREATOR >>> ${element3.text()}")
+                        }
                     }
                 }
 
