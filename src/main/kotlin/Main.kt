@@ -27,16 +27,55 @@ fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
     }
 }
 
-fun main() {
-    var currentPage = 1
-    println("Enter search query below")
+fun getRumbleEditorPicks() {
+    try {
+        val doc = Jsoup.connect("https://rumble.com/").get()
+
+        for (element in doc.getElementsByClass("tabs tab-editor-picks")) {
+            for (element2 in element.getElementsByClass("mediaList-list container content top-earners without-show-more-link")) {
+                for (element3a in element2.getElementsByClass("mediaList-item")) {
+                    for (element4a in element3a.getElementsByClass("mediaList-heading size-medium")) {
+                        println(element4a.text())
+                    }
+                }
+            }
+        }
+    } catch (exception: IOException) {
+        exception.printStackTrace()
+    }
+}
+
+fun getInput() {
     val query = readln()
-    getRumbleSearchResultsForQuery(query)
+    var currentPage = 1
 
     while (true) {
-        if (readln() == "next page") {
-            currentPage++
-            getRumbleSearchResultsForQuery(query, currentPage)
+        when(query.lowercase()) {
+            "editor picks" -> {
+                getRumbleEditorPicks()
+                getInput()
+            }
+
+            "next page" -> {
+                currentPage++
+                getRumbleSearchResultsForQuery(query, currentPage)
+                getInput()
+            }
+
+            "help" -> {
+                println("'next page'        >>> Shows videos on the next page if it exists")
+                println("'editor picks      >>> Shows current editor picks")
+                getInput()
+            }
+
+            else -> {
+                getRumbleSearchResultsForQuery(query)
+                getInput()
+            }
         }
     }
+}
+fun main() {
+    println("Enter search query below")
+    getInput()
 }
