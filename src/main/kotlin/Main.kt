@@ -53,26 +53,23 @@ fun getInput() {
         when(query.lowercase()) {
             "editor picks" -> {
                 getRumbleEditorPicks()
-                getInput()
             }
 
             "next page" -> {
                 currentPage++
                 getRumbleSearchResultsForQuery(query, currentPage)
-                getInput()
             }
 
             "help" -> {
                 println("'next page'        >>> Shows videos on the next page if it exists")
                 println("'editor picks      >>> Shows current editor picks")
-                getInput()
             }
 
             else -> {
                 getRumbleSearchResultsForQuery(query)
-                getInput()
             }
         }
+        getInput()
     }
 }
 fun main() {
