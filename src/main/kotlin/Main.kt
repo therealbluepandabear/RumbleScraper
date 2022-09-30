@@ -3,6 +3,8 @@ import java.io.IOException
 
 class RumbleScraper private constructor() {
     companion object {
+        private const val RUMBLE_URL = "https://rumble.com/"
+
         fun create(): RumbleScraper {
             return RumbleScraper()
         }
@@ -15,9 +17,9 @@ class RumbleScraper private constructor() {
     fun scrapeByQuery(query: String, page: Int = 1) {
         try {
             val url = if (page <= 1) {
-                "https://rumble.com/search/video?q=$query"
+                "${RUMBLE_URL}search/video?q=$query"
             } else {
-                "https://rumble.com/search/video?q=$query&page=$page"
+                "${RUMBLE_URL}search/video?q=$query&page=$page"
             }
 
             val doc = Jsoup.connect(url).get()
@@ -56,7 +58,7 @@ class RumbleScraper private constructor() {
 
     fun scrapeEditorPicks() {
         try {
-            val doc = Jsoup.connect("https://rumble.com/").get()
+            val doc = Jsoup.connect(RUMBLE_URL).get()
 
             for (element in doc.getElementsByClass("tabs tab-editor-picks")) {
                 for (element2 in element.getElementsByClass("mediaList-list container content top-earners without-show-more-link")) {
