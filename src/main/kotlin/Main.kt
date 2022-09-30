@@ -50,6 +50,10 @@ fun getInput() {
     var currentPage = 1
 
     while (true) {
+        if (query != "next page") {
+            currentPage = 1
+        }
+
         when(query.lowercase()) {
             "editor picks" -> {
                 getRumbleEditorPicks()
