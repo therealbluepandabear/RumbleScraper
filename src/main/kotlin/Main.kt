@@ -42,9 +42,9 @@ class RumbleScraper {
 
                     drawSeparator()
                 }
-            }
 
-            println("Page $page")
+                println("Page $page")
+            }
         } catch (exception: IOException) {
             exception.printStackTrace()
         }
