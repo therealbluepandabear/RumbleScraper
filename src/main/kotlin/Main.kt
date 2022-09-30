@@ -40,6 +40,10 @@ class RumbleScraper private constructor() {
                         }
                     }
 
+                    for (element2 in element.getElementsByClass("video-item--meta video-item--views")) {
+                        println("VIEWS >>> ${element2.attr("data-value")}")
+                    }
+
                     drawSeparator()
                 }
 
