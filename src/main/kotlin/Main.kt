@@ -8,6 +8,10 @@ class RumbleScraper {
         }
     }
 
+    private fun drawSeparator() {
+        println("-".repeat(100))
+    }
+
     fun scrapeByQuery(query: String, page: Int = 1) {
         try {
             val url = if (page <= 1) {
@@ -36,7 +40,7 @@ class RumbleScraper {
                         }
                     }
 
-                    println("-".repeat(100))
+                    drawSeparator()
                 }
             }
 
@@ -55,6 +59,7 @@ class RumbleScraper {
                     for (element3 in element2.getElementsByClass("mediaList-item")) {
                         for (element4 in element3.getElementsByClass("mediaList-heading size-medium")) {
                             println(element4.text())
+                            drawSeparator()
                         }
                     }
                 }
