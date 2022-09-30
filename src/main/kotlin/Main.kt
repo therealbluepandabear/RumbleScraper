@@ -16,8 +16,16 @@ fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
         } else {
             for (element in doc.getElementsByClass("video-listing-entry")) {
                 for (element2 in element.getElementsByClass("video-item--title")) {
-                    println("${element2.text()}'\n${"-".repeat(100)}")
+                    println(element2.text())
                 }
+
+                for (element2 in element.getElementsByClass("video-item--by")) {
+                    for (element3 in element2.getElementsByClass("ellipsis-1")) {
+                        println("CREATOR >>> ${element3.text()}")
+                    }
+                }
+
+                println("-".repeat(100))
             }
         }
 
@@ -33,9 +41,9 @@ fun getRumbleEditorPicks() {
 
         for (element in doc.getElementsByClass("tabs tab-editor-picks")) {
             for (element2 in element.getElementsByClass("mediaList-list container content top-earners without-show-more-link")) {
-                for (element3a in element2.getElementsByClass("mediaList-item")) {
-                    for (element4a in element3a.getElementsByClass("mediaList-heading size-medium")) {
-                        println(element4a.text())
+                for (element3 in element2.getElementsByClass("mediaList-item")) {
+                    for (element4 in element3.getElementsByClass("mediaList-heading size-medium")) {
+                        println(element4.text())
                     }
                 }
             }
