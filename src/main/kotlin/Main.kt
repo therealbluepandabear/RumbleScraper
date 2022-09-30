@@ -1,65 +1,76 @@
 import org.jsoup.Jsoup
 import java.io.IOException
 
-fun getRumbleSearchResultsForQuery(query: String, page: Int = 1) {
-    try {
-        val url = if (page <= 1) {
-            "https://rumble.com/search/video?q=$query"
-        } else {
-            "https://rumble.com/search/video?q=$query&page=$page"
+class RumbleScraper {
+    companion object {
+        fun create(): RumbleScraper {
+            return RumbleScraper()
         }
+    }
 
-        val doc = Jsoup.connect(url).get()
+    fun scrapeByQuery(query: String, page: Int = 1) {
+        try {
+            val url = if (page <= 1) {
+                "https://rumble.com/search/video?q=$query"
+            } else {
+                "https://rumble.com/search/video?q=$query&page=$page"
+            }
 
-        if (doc.getElementsByClass("video-listing-entry").size == 0) {
-            println("No results found")
-        } else {
-            for (element in doc.getElementsByClass("video-listing-entry")) {
-                for (element2 in element.getElementsByClass("video-item--title")) {
-                    println(element2.text())
+            val doc = Jsoup.connect(url).get()
+
+            if (doc.getElementsByClass("video-listing-entry").size == 0) {
+                println("No results found")
+            } else {
+                for (element in doc.getElementsByClass("video-listing-entry")) {
+                    for (element2 in element.getElementsByClass("video-item--title")) {
+                        println(element2.text())
+                    }
+
+                    for (element2 in element.getElementsByClass("video-item--by")) {
+                        for (element3 in element2.getElementsByClass("ellipsis-1")) {
+                            if (element3.getElementsByClass("video-item--by-verified verification-badge-icon").isNotEmpty()) {
+                                println("CREATOR >>> ${element3.text()} (V)")
+                            } else {
+                                println("CREATOR >>> ${element3.text()}")
+                            }
+                        }
+                    }
+
+                    println("-".repeat(100))
                 }
+            }
 
-                for (element2 in element.getElementsByClass("video-item--by")) {
-                    for (element3 in element2.getElementsByClass("ellipsis-1")) {
-                        if (element3.getElementsByClass("video-item--by-verified verification-badge-icon").isNotEmpty()) {
-                            println("CREATOR >>> ${element3.text()} (V)")
-                        } else {
-                            println("CREATOR >>> ${element3.text()}")
+            println("Page $page")
+        } catch (exception: IOException) {
+            exception.printStackTrace()
+        }
+    }
+
+    fun scrapeEditorPicks() {
+        try {
+            val doc = Jsoup.connect("https://rumble.com/").get()
+
+            for (element in doc.getElementsByClass("tabs tab-editor-picks")) {
+                for (element2 in element.getElementsByClass("mediaList-list container content top-earners without-show-more-link")) {
+                    for (element3 in element2.getElementsByClass("mediaList-item")) {
+                        for (element4 in element3.getElementsByClass("mediaList-heading size-medium")) {
+                            println(element4.text())
                         }
                     }
                 }
-
-                println("-".repeat(100))
             }
+        } catch (exception: IOException) {
+            exception.printStackTrace()
         }
-
-        println("Page $page")
-    } catch (exception: IOException) {
-        exception.printStackTrace()
     }
 }
 
-fun getRumbleEditorPicks() {
-    try {
-        val doc = Jsoup.connect("https://rumble.com/").get()
-
-        for (element in doc.getElementsByClass("tabs tab-editor-picks")) {
-            for (element2 in element.getElementsByClass("mediaList-list container content top-earners without-show-more-link")) {
-                for (element3 in element2.getElementsByClass("mediaList-item")) {
-                    for (element4 in element3.getElementsByClass("mediaList-heading size-medium")) {
-                        println(element4.text())
-                    }
-                }
-            }
-        }
-    } catch (exception: IOException) {
-        exception.printStackTrace()
-    }
-}
 
 fun getInput() {
     val query = readln()
     var currentPage = 1
+
+    val scraper = RumbleScraper.create()
 
     while (true) {
         if (query != "next page") {
@@ -68,12 +79,12 @@ fun getInput() {
 
         when(query.lowercase()) {
             "editor picks" -> {
-                getRumbleEditorPicks()
+                scraper.scrapeEditorPicks()
             }
 
             "next page" -> {
                 currentPage++
-                getRumbleSearchResultsForQuery(query, currentPage)
+                scraper.scrapeByQuery(query, currentPage)
             }
 
             "help" -> {
@@ -82,7 +93,7 @@ fun getInput() {
             }
 
             else -> {
-                getRumbleSearchResultsForQuery(query)
+                scraper.scrapeByQuery(query)
             }
         }
         getInput()
