@@ -1,3 +1,6 @@
+
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import org.jsoup.Jsoup
 import java.io.IOException
 
@@ -74,43 +77,39 @@ class RumbleScraper private constructor() {
             exception.printStackTrace()
         }
     }
-}
 
+    fun scrapeVideoSrcFromUrl(url: String): String? {
+        val document = Jsoup.connect(url).get()
 
-fun getInput() {
-    val query = readln()
-    var currentPage = 1
+        for (element in document.getElementsByTag("script")) {
+            if (element.attr("type") == "application/ld+json") {
+                val content = element.data()
+                val array = JsonParser.parseString(content).asJsonArray
 
-    val scraper = RumbleScraper.create()
+                val embedUrl = Gson().fromJson(array.get(0).asJsonObject.get("embedUrl"), String::class.java)
+                var embedId = ""
 
-    while (true) {
-        if (query != "next page") {
-            currentPage = 1
-        }
+                for (char in embedUrl.dropLast(1).reversed()) {
+                    if (char != '/') {
+                        embedId += char
+                    } else {
+                        break
+                    }
+                }
 
-        when(query.lowercase()) {
-            "editor picks" -> {
-                scraper.scrapeEditorPicks()
-            }
+                val doc = Jsoup.connect("https://rumble.com/embedJS/u3/?request=video&ver=2&v=${embedId.reversed()}").ignoreContentType(true).get()
+                val jsonData = doc.getElementsByTag("body").first()?.text()
 
-            "next page" -> {
-                currentPage++
-                scraper.scrapeByQuery(query, currentPage)
-            }
+                val mp4 = JsonParser.parseString(jsonData).asJsonObject.get("u").asJsonObject.get("mp4").asJsonObject.get("url").toString()
 
-            "help" -> {
-                println("'next page'        >>> Shows videos on the next page if it exists")
-                println("'editor picks      >>> Shows current editor picks")
-            }
-
-            else -> {
-                scraper.scrapeByQuery(query)
+                return mp4.replace("\"", "")
             }
         }
-        getInput()
+
+        return null
     }
 }
+
 fun main() {
-    println("Enter search query below")
-    getInput()
+    println(RumbleScraper.create().scrapeVideoSrcFromUrl("https://rumble.com/v1m9oki-our-first-automatic-afk-farms-locals-minecraft-server-smp-ep3-live-stream.html"))
 }
